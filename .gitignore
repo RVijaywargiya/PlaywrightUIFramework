@@ -37,3 +37,11 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+*.class
+/target/
+/.gradle/
+/build/
+.idea/
+*.iml
+.metadata/
