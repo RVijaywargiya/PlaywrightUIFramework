@@ -45,3 +45,5 @@ build/
 .idea/
 *.iml
 .metadata/
+allure-results
+allure-report
