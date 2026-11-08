@@ -4,11 +4,11 @@ import base.BaseTest;
 import data.DataManager;
 import io.qameta.allure.Description;
 import io.qameta.allure.testng.AllureTestNg;
-import org.testng.Assert;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 import pages.HomePage;
 import pages.LoginPage;
+import static com.microsoft.playwright.assertions.PlaywrightAssertions.*;
 
 @Listeners(AllureTestNg.class)
 public class LoginTest extends BaseTest {
@@ -26,7 +26,6 @@ public class LoginTest extends BaseTest {
 
         HomePage homePage = loginPage.enterUsername(userName).enterPassword(password).clickLoginButton();
 
-        Assert.assertTrue(homePage.isHomePageDisplayed());
-
+        assertThat(homePage.getUpgradeButtonLocator()).isVisible();
     }
 }

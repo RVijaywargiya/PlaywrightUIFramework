@@ -9,10 +9,10 @@ public class HomePage extends BasePage {
         super(page);
     }
 
-    public boolean isHomePageDisplayed() {
+    public Locator getUpgradeButtonLocator() {
         Locator upgradeButton = page.getByRole(com.microsoft.playwright.options.AriaRole.BUTTON,
                 new Page.GetByRoleOptions().setName("Upgrade"));
         System.out.println("Inside home page");
-        return upgradeButton.isVisible();
+        return upgradeButton;
     }
 }

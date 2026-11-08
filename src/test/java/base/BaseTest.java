@@ -1,9 +1,7 @@
 package base;
 
 import com.microsoft.playwright.*;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeSuite;
-import org.testng.annotations.BeforeTest;
+import org.testng.annotations.*;
 
 import java.util.regex.Pattern;
 
@@ -16,10 +14,19 @@ public class BaseTest {
     protected BrowserContext context;
     protected Page page;
 
-    @BeforeTest
-    public void setUp() {
+    @BeforeClass
+    protected void launchBrowser() {
         playwright = Playwright.create();
         browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
+    }
+
+    @AfterClass
+    protected void closeBrowser() {
+        playwright.close();
+    }
+
+    @BeforeMethod
+    protected void createContextAndPage() {
         context = browser.newContext(new Browser.NewContextOptions()
                 .setViewportSize(null));
         page = context.newPage();
@@ -27,15 +34,11 @@ public class BaseTest {
         assertThat(page).hasTitle(Pattern.compile("OrangeHRM"));
     }
 
-    @AfterTest
-    public void tearDown() {
+    @AfterMethod
+    protected void closeContext() {
         // Cleanup
         context.close();
         System.out.println("Context closed");
-        browser.close();
-        System.out.println("Browser closed");
-        playwright.close();
-        System.out.println("Playwright closed");
     }
 
 }
