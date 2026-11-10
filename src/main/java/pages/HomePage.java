@@ -17,9 +17,10 @@ public class HomePage extends BasePage {
     }
 
     public void logout() {
-        click(getByRole(AriaRole.PARAGRAPH, "Leticia Amanda"));
-        click(getByRole(AriaRole.LINK, "Logout"));
-//        new LoginPage(page);
+        Locator locator = page.locator("img[alt='profile picture'][class='oxd-userdropdown-img']");
+        click(locator);
+        page.waitForTimeout(5000);
+        click(getByRole(AriaRole.MENUITEM, "Logout"));
     }
 
 
