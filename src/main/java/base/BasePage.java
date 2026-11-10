@@ -198,8 +198,8 @@ public abstract class BasePage {
     // WAIT OPERATIONS
     // =========================================================
 
-    protected void waitForVisible(String selector) {
-        locator(selector).waitFor(
+    protected void waitForVisible(Locator locator) {
+        locator.waitFor(
                 new Locator.WaitForOptions()
                         .setState(WaitForSelectorState.VISIBLE));
     }

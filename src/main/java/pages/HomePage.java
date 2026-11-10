@@ -3,6 +3,7 @@ package pages;
 import base.BasePage;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.options.AriaRole;
 
 public class HomePage extends BasePage {
     protected HomePage(Page page) {
@@ -10,9 +11,16 @@ public class HomePage extends BasePage {
     }
 
     public Locator getUpgradeButtonLocator() {
-        Locator upgradeButton = page.getByRole(com.microsoft.playwright.options.AriaRole.BUTTON,
-                new Page.GetByRoleOptions().setName("Upgrade"));
+        Locator upgradeButton = getByRole(AriaRole.BUTTON, "Upgrade");
         System.out.println("Inside home page");
         return upgradeButton;
     }
+
+    public void logout() {
+        click(getByRole(AriaRole.PARAGRAPH, "Leticia Amanda"));
+        click(getByRole(AriaRole.LINK, "Logout"));
+//        new LoginPage(page);
+    }
+
+
 }
