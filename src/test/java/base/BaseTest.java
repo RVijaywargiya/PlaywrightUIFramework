@@ -1,6 +1,8 @@
 package base;
 
 import com.microsoft.playwright.*;
+import config.ApplicationConfig;
+import config.ConfigManager;
 import org.testng.annotations.*;
 
 import java.util.regex.Pattern;
@@ -13,6 +15,7 @@ public class BaseTest {
     protected Browser browser;
     protected BrowserContext context;
     protected Page page;
+    protected ApplicationConfig config;
 
     @BeforeClass
     protected void launchBrowser() {
@@ -27,10 +30,10 @@ public class BaseTest {
 
     @BeforeMethod
     protected void createContextAndPage() {
-        context = browser.newContext(new Browser.NewContextOptions()
-                .setViewportSize(null));
+        config = ConfigManager.getConfig();
+        context = browser.newContext(new Browser.NewContextOptions().setViewportSize(null));
         page = context.newPage();
-        page.navigate("https://opensource-demo.orangehrmlive.com/web/index.php/auth/login");
+        page.navigate(config.baseUrl());
         assertThat(page).hasTitle(Pattern.compile("OrangeHRM"));
     }
 

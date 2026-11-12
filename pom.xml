@@ -16,6 +16,7 @@
         <jackson.version>2.19.2</jackson.version>
         <assertj.version>3.27.3</assertj.version>
         <allure.version>2.29.1</allure.version>
+        <aeonbits.version>1.0.12</aeonbits.version>
     </properties>
 
     <dependencies>
@@ -48,6 +49,13 @@
             <groupId>io.qameta.allure</groupId>
             <artifactId>allure-testng</artifactId>
             <version>${allure.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.aeonbits.owner</groupId>
+            <artifactId>owner</artifactId>
+            <version>${aeonbits.version}</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 
