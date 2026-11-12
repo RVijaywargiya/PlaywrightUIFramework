@@ -15,6 +15,6 @@ public interface ApplicationConfig extends Config {
     String browser();
 
     @Key("headless")
-    @Config.DefaultValue("true")
+    @DefaultValue("true")
     boolean headless();
 }
