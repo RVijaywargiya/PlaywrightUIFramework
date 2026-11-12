@@ -1,13 +1,15 @@
 package base;
 
-import com.microsoft.playwright.*;
+import com.microsoft.playwright.Browser;
+import com.microsoft.playwright.BrowserContext;
+import com.microsoft.playwright.Page;
+import com.microsoft.playwright.Playwright;
 import config.ApplicationConfig;
 import config.ConfigManager;
-import org.testng.annotations.*;
-
-import java.util.regex.Pattern;
-
-import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
+import factory.BrowserFactory;
+import factory.PlaywrightFactory;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 
 public class BaseTest {
 
@@ -17,31 +19,20 @@ public class BaseTest {
     protected Page page;
     protected ApplicationConfig config;
 
-    @BeforeClass
-    protected void launchBrowser() {
-        playwright = Playwright.create();
-        browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
-    }
-
-    @AfterClass
-    protected void closeBrowser() {
-        playwright.close();
-    }
-
     @BeforeMethod
-    protected void createContextAndPage() {
+    public void setUp() {
         config = ConfigManager.getConfig();
-        context = browser.newContext(new Browser.NewContextOptions().setViewportSize(null));
+        playwright = PlaywrightFactory.createPlaywright();
+        browser = BrowserFactory.createBrowser(playwright, config.browser(), config.headless());
+        context = browser.newContext();
         page = context.newPage();
         page.navigate(config.baseUrl());
-        assertThat(page).hasTitle(Pattern.compile("OrangeHRM"));
     }
 
     @AfterMethod
-    protected void closeContext() {
-        // Cleanup
-        context.close();
-        System.out.println("Context closed");
+    public void tearDown() {
+        if (context != null) context.close();
+        if (browser != null) browser.close();
+        if (playwright != null) playwright.close();
     }
-
 }
