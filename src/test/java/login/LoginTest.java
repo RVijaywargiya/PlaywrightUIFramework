@@ -23,7 +23,7 @@ public class LoginTest extends BaseTest {
 
     @Test(dataProvider = "loginData")
     public void verifySuccessfulLogin(String username, String password) {
-
+        log.info("Starting login test");
         LoginPage loginPage = new LoginPage(page);
 
         HomePage homePage = loginPage
@@ -34,5 +34,6 @@ public class LoginTest extends BaseTest {
         assertThat(homePage.getUpgradeButtonLocator()).isVisible();
 
         homePage.logout();
+        log.info("Login test passed");
     }
 }
