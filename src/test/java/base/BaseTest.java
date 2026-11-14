@@ -7,6 +7,7 @@ import com.microsoft.playwright.Playwright;
 import config.ApplicationConfig;
 import config.ConfigManager;
 import factory.BrowserFactory;
+import factory.PageFactory;
 import factory.PlaywrightFactory;
 import logging.FrameworkLogger;
 import org.slf4j.Logger;
@@ -31,7 +32,7 @@ public class BaseTest {
         log.info("Opening browser...");
         browser = BrowserFactory.createBrowser(playwright, config.browser(), config.headless());
         context = browser.newContext();
-        page = context.newPage();
+        page = PageFactory.createPage(browser);
 
         log.info("Navigating to the URL");
         page.navigate(config.baseUrl());
@@ -43,5 +44,9 @@ public class BaseTest {
         if (context != null) context.close();
         if (browser != null) browser.close();
         if (playwright != null) playwright.close();
+    }
+
+    public Page getPage() {
+        return page;
     }
 }

@@ -47,3 +47,4 @@ build/
 .metadata/
 allure-results
 allure-report
+logs
