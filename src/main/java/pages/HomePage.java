@@ -6,7 +6,7 @@ import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.AriaRole;
 
 public class HomePage extends BasePage {
-    protected HomePage(Page page) {
+    public HomePage(Page page) {
         super(page);
     }
 

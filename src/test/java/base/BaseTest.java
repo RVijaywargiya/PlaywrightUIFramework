@@ -6,6 +6,7 @@ import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
 import config.ApplicationConfig;
 import config.ConfigManager;
+import factory.BrowserContextFactory;
 import factory.BrowserFactory;
 import factory.PageFactory;
 import factory.PlaywrightFactory;
@@ -31,7 +32,7 @@ public class BaseTest {
 
         log.info("Opening browser...");
         browser = BrowserFactory.createBrowser(playwright, config.browser(), config.headless());
-        context = browser.newContext();
+        context = BrowserContextFactory.createContext(browser);
         page = PageFactory.createPage(browser);
 
         log.info("Navigating to the URL");

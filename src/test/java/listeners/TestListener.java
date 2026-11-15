@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
 import logging.FrameworkLogger;
+import utils.ScreenshotUtils;
 
 import java.io.ByteArrayInputStream;
 
@@ -28,6 +29,14 @@ public class TestListener implements ITestListener {
         log.info("Test PASSED: {} | Duration: {} ms",
                 result.getName(),
                 getExecutionTime(result));
+
+        if (result.getInstance() instanceof BaseTest baseTest) {
+
+            new ScreenshotUtils().takeScreenshot(
+                    baseTest.getPage(),
+                    result.getName() + ".png"
+            );
+        }
     }
 
     @Override
@@ -36,11 +45,16 @@ public class TestListener implements ITestListener {
         log.error("Test FAILED: {}", result.getName());
 
         if (result.getThrowable() != null) {
-            log.error("Failure reason: ",
-                    result.getThrowable());
+            log.error("Failure reason: ", result.getThrowable());
         }
 
-        captureScreenshot(result);
+        if (result.getInstance() instanceof BaseTest baseTest) {
+
+            new ScreenshotUtils().takeScreenshot(
+                    baseTest.getPage(),
+                    result.getName() + ".png"
+            );
+        }
     }
 
     @Override
@@ -54,40 +68,40 @@ public class TestListener implements ITestListener {
         }
     }
 
-    private void captureScreenshot(ITestResult result) {
+//    private void captureScreenshot(ITestResult result) {
+//
+//        Object testInstance = result.getInstance();
+//
+//        if (!(testInstance instanceof BaseTest baseTest)) {
+//            return;
+//        }
+//
+//        Page page = baseTest.getPage();
+//
+//        if (page == null || page.isClosed()) {
+//            log.warn("Screenshot not captured: Page is unavailable");
+//            return;
+//        }
+//
+//        try {
+//            byte[] screenshot = page.screenshot(
+//                    new Page.ScreenshotOptions()
+//                            .setFullPage(true)
+//            );
+//
+//            Allure.addAttachment(
+//                    "Failure Screenshot - " + result.getName(),
+//                    "image/png",
+//                    new ByteArrayInputStream(screenshot),
+//                    ".png"
+//            );
+//
+//            log.info("Failure screenshot attached to Allure");
+//
+//        } catch (Exception e) {
+//            log.error("Unable to capture failure screenshot", e);
+//        }
 
-        Object testInstance = result.getInstance();
-
-        if (!(testInstance instanceof BaseTest baseTest)) {
-            return;
-        }
-
-        Page page = baseTest.getPage();
-
-        if (page == null || page.isClosed()) {
-            log.warn("Screenshot not captured: Page is unavailable");
-            return;
-        }
-
-        try {
-            byte[] screenshot = page.screenshot(
-                    new Page.ScreenshotOptions()
-                            .setFullPage(true)
-            );
-
-            Allure.addAttachment(
-                    "Failure Screenshot - " + result.getName(),
-                    "image/png",
-                    new ByteArrayInputStream(screenshot),
-                    ".png"
-            );
-
-            log.info("Failure screenshot attached to Allure");
-
-        } catch (Exception e) {
-            log.error("Unable to capture failure screenshot", e);
-        }
-    }
 
     private long getExecutionTime(ITestResult result) {
         return result.getEndMillis() - result.getStartMillis();
