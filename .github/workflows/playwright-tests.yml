@@ -1,0 +1,76 @@
+
+name: Playwright Java Automation
+
+on:
+  push:
+    branches: [ main ]
+
+  pull_request:
+    branches: [ main ]
+
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Select test environment"
+        required: true
+        default: qa
+        type: choice
+        options:
+          - dev
+          - qa
+          - staging
+
+jobs:
+  playwright-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout latest repository code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Build Docker image
+      - name: Build Docker image
+        run: |
+          docker build -t playwright-framework:latest .
+
+      # 3. Prepare artifact directories
+      - name: Create artifact directories
+        run: |
+          mkdir -p allure-results
+          mkdir -p logs
+          mkdir -p test-artifacts
+          mkdir -p target
+
+      # 4. Run tests inside Docker
+      - name: Execute Playwright tests
+        env:
+          APP_USERNAME: ${{ secrets.APP_USERNAME }}
+          APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
+          BASE_URL: ${{ secrets.BASE_URL }}
+          TEST_ENV: ${{ github.event.inputs.environment || 'qa' }}
+        run: |
+          docker run --rm --init --ipc=host \
+            -e APP_USERNAME \
+            -e APP_PASSWORD \
+            -e BASE_URL \
+            -v "$GITHUB_WORKSPACE/allure-results:/app/allure-results" \
+            -v "$GITHUB_WORKSPACE/logs:/app/logs" \
+            -v "$GITHUB_WORKSPACE/test-artifacts:/app/test-artifacts" \
+            -v "$GITHUB_WORKSPACE/target:/app/target" \
+            playwright-framework:latest \
+            mvn -B clean test -Denv="$TEST_ENV"
+
+      # 5. Upload reports and test artifacts
+      - name: Upload test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-test-results
+          path: |
+            allure-results/
+            logs/
+            test-artifacts/
+            target/surefire-reports/
+          if-no-files-found: warn
+          retention-days: 7
