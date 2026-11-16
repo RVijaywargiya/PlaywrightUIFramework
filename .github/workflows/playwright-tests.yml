@@ -57,7 +57,6 @@ jobs:
             -v "$GITHUB_WORKSPACE/allure-results:/app/allure-results" \
             -v "$GITHUB_WORKSPACE/logs:/app/logs" \
             -v "$GITHUB_WORKSPACE/test-artifacts:/app/test-artifacts" \
-            -v "$GITHUB_WORKSPACE/target:/app/target" \
             playwright-framework:latest \
             mvn -B clean test -Denv="$TEST_ENV"
 
