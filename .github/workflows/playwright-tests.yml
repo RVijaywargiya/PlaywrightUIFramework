@@ -70,6 +70,5 @@ jobs:
             allure-results/
             logs/
             test-artifacts/
-            target/surefire-reports/
           if-no-files-found: warn
           retention-days: 7
